@@ -1,0 +1,820 @@
+/* ============================================================
+   RaidMonster – Mobile-first Dark Fantasy CSS
+   ============================================================ */
+
+/* ---------- CSS Variables ---------- */
+:root {
+  --bg:          #0d0d1f;
+  --bg-card:     #16162e;
+  --bg-card2:    #1e1e40;
+  --bg-card3:    #252560;
+  --gold:        #ffd700;
+  --gold-dim:    #b8960a;
+  --purple:      #7b2fff;
+  --purple-dim:  #5a1fcc;
+  --cyan:        #00d4ff;
+  --green:       #00e676;
+  --red:         #f44336;
+  --orange:      #ff9800;
+  --text:        #ffffff;
+  --text-2:      #cccce8;
+  --text-muted:  #8888aa;
+  --border:      rgba(123,47,255,.35);
+  --shadow:      0 4px 24px rgba(0,0,0,.6);
+  --radius:      12px;
+  --radius-sm:   8px;
+  --font:        'Segoe UI', system-ui, -apple-system, sans-serif;
+  --tap:         48px; /* minimum tap target */
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font-family: var(--font); cursor: pointer; border: none; outline: none; }
+img    { display: block; }
+input  { font-family: var(--font); }
+ul, ol { list-style: none; }
+
+/* ---------- Scrollbar (desktop) ---------- */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ============================================================
+   Layout Utilities
+   ============================================================ */
+.screen {
+  display: none;
+  flex-direction: column;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+.screen.active { display: flex; }
+
+.full-screen {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: env(safe-area-inset-bottom, 12px);
+}
+
+.padded { padding: 12px 16px; }
+.gap-sm { gap: 8px; }
+.gap-md { gap: 12px; }
+.flex   { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.align-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.text-center { text-align: center; }
+.hidden { display: none !important; }
+
+/* ============================================================
+   Loading Splash
+   ============================================================ */
+.loading-splash {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 100dvh;
+  gap: 20px;
+  background: radial-gradient(ellipse at center, #1a0a3a 0%, #0d0d1f 70%);
+  animation: fadeIn .4s ease;
+}
+.splash-title {
+  font-size: clamp(2.4rem, 8vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-shadow: 0 0 30px rgba(255,215,0,.5), 0 0 60px rgba(255,215,0,.25);
+}
+.splash-title span { color: var(--purple); }
+.splash-sub { color: var(--text-muted); font-size: .9rem; }
+
+.spinner {
+  width: 44px; height: 44px;
+  border: 3px solid rgba(255,255,255,.1);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+@keyframes glow {
+  0%,100% { box-shadow: 0 0 8px rgba(255,215,0,.4); }
+  50%      { box-shadow: 0 0 24px rgba(255,215,0,.9); }
+}
+
+/* ============================================================
+   Typography
+   ============================================================ */
+.screen-title {
+  font-size: 1.5rem; font-weight: 800;
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(255,215,0,.4);
+  letter-spacing: 1px;
+}
+.section-label {
+  font-size: .7rem; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.chip {
+  display: inline-block; padding: 2px 8px;
+  border-radius: 99px; font-size: .7rem; font-weight: 700;
+  text-transform: capitalize; color: #fff;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: var(--tap); padding: 10px 20px;
+  border-radius: var(--radius); font-size: .95rem; font-weight: 700;
+  transition: transform .12s, opacity .12s;
+  user-select: none;
+}
+.btn:active { transform: scale(.96); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.btn-gold {
+  background: linear-gradient(135deg, #ffd700, #ff9800);
+  color: #000; box-shadow: 0 4px 16px rgba(255,152,0,.4);
+}
+.btn-purple {
+  background: linear-gradient(135deg, var(--purple), #4a0ddd);
+  color: #fff; box-shadow: 0 4px 16px rgba(123,47,255,.4);
+}
+.btn-red {
+  background: linear-gradient(135deg, #f44336, #b71c1c);
+  color: #fff;
+}
+.btn-ghost {
+  background: transparent;
+  border: 2px solid var(--border);
+  color: var(--text-2);
+}
+.btn-sm { min-height: 36px; padding: 6px 14px; font-size: .85rem; }
+.btn-lg {
+  min-height: 56px; font-size: 1.1rem; letter-spacing: 1px;
+  width: 100%; border-radius: var(--radius);
+}
+.btn-icon {
+  width: var(--tap); height: var(--tap); padding: 0;
+  border-radius: 50%; font-size: 1.2rem;
+}
+.btn-block { width: 100%; }
+
+/* ============================================================
+   Top Bar (Nav header)
+   ============================================================ */
+.top-bar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center;
+  padding: 10px 16px;
+  background: rgba(13,13,31,.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  min-height: 56px; gap: 12px;
+}
+.top-bar-back {
+  width: 40px; height: 40px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.06); border-radius: 50%;
+  font-size: 1.2rem; color: var(--text-2);
+}
+.top-bar-title { flex: 1; font-size: 1.1rem; font-weight: 700; color: var(--gold); }
+
+/* ============================================================
+   Currency Bar
+   ============================================================ */
+.currency-bar {
+  display: flex; gap: 10px; align-items: center;
+  padding: 8px 16px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+.currency-item {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(0,0,0,.3); border-radius: 99px;
+  padding: 4px 10px; font-size: .85rem; font-weight: 700;
+}
+.currency-icon { font-size: 1rem; }
+.energy-bar-wrap {
+  flex: 1; display: flex; align-items: center; gap: 6px;
+  font-size: .8rem; color: var(--text-muted);
+}
+.energy-progress {
+  flex: 1; height: 8px; background: rgba(255,255,255,.1);
+  border-radius: 4px; overflow: hidden;
+}
+.energy-fill {
+  height: 100%; background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 4px; transition: width .4s;
+}
+
+/* ============================================================
+   Bottom Navigation
+   ============================================================ */
+.bottom-nav {
+  display: flex;
+  background: rgba(13,13,31,.95);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.nav-btn {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 8px 4px;
+  min-height: var(--tap);
+  color: var(--text-muted);
+  font-size: .65rem; font-weight: 700; letter-spacing: .5px;
+  text-transform: uppercase; gap: 3px;
+  background: transparent;
+  transition: color .15s;
+}
+.nav-btn .nav-icon { font-size: 1.4rem; line-height: 1; }
+.nav-btn.active { color: var(--gold); }
+.nav-btn:active { opacity: .7; }
+
+/* ============================================================
+   Title Screen
+   ============================================================ */
+#screen-title {
+  align-items: center; justify-content: center;
+  min-height: 100dvh;
+  background: radial-gradient(ellipse at 50% 30%, #2a1060 0%, var(--bg) 70%);
+  padding: 24px;
+  gap: 0;
+}
+.title-art {
+  font-size: clamp(3rem, 12vw, 5.5rem);
+  font-weight: 900; text-align: center;
+  line-height: 1;
+  color: var(--gold);
+  text-shadow: 0 0 40px rgba(255,215,0,.6), 0 0 80px rgba(255,215,0,.3);
+  letter-spacing: 3px;
+  animation: glow 3s ease-in-out infinite;
+}
+.title-sub {
+  font-size: clamp(.9rem, 3vw, 1.2rem);
+  color: var(--purple);
+  letter-spacing: 4px; text-transform: uppercase;
+  margin: 8px 0 40px;
+  animation: pulse 2s ease-in-out infinite;
+}
+.title-tagline {
+  font-size: .9rem; color: var(--text-muted);
+  margin-bottom: 32px; text-align: center;
+  max-width: 320px;
+}
+.title-badges {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 48px;
+}
+.badge {
+  background: rgba(123,47,255,.2); border: 1px solid var(--border);
+  padding: 4px 12px; border-radius: 99px;
+  font-size: .75rem; font-weight: 600; color: var(--text-2);
+}
+.version-tag { font-size: .7rem; color: var(--text-muted); margin-top: 24px; }
+
+/* ============================================================
+   Starter Screen
+   ============================================================ */
+#screen-starter {
+  background: radial-gradient(ellipse at 50% 0%, #0d3d1a 0%, var(--bg) 60%);
+  padding: 0;
+}
+.starter-intro {
+  padding: 24px 20px 16px;
+  text-align: center;
+}
+.starter-intro h2 { font-size: 1.4rem; color: var(--gold); margin-bottom: 8px; }
+.starter-intro p  { color: var(--text-2); font-size: .9rem; line-height: 1.5; }
+.starter-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; padding: 16px;
+}
+.starter-card {
+  background: var(--bg-card2);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 8px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; cursor: pointer;
+  transition: border-color .2s, transform .15s;
+}
+.starter-card:active { transform: scale(.96); }
+.starter-card.selected {
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(255,215,0,.35);
+}
+.starter-card img { width: 72px; height: 72px; image-rendering: pixelated; }
+.starter-name { font-size: .85rem; font-weight: 700; color: var(--text); }
+.starter-desc { font-size: .7rem; color: var(--text-muted); text-align: center; line-height: 1.4; }
+.starter-type-badge {
+  padding: 2px 10px; border-radius: 99px; font-size: .7rem; font-weight: 700; color: #fff;
+}
+
+/* ============================================================
+   Champion Card
+   ============================================================ */
+.champion-card {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; cursor: pointer; position: relative;
+  transition: transform .15s, border-color .2s;
+}
+.champion-card:active { transform: scale(.97); }
+.champion-card.in-team {
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(255,215,0,.3);
+}
+.champion-card.fainted { opacity: .45; filter: grayscale(.8); }
+
+.champion-sprite {
+  width: 80px; height: 80px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.5));
+  animation: bounce 3s ease-in-out infinite;
+}
+.champion-name { font-size: .8rem; font-weight: 700; color: var(--text); text-align: center; }
+.champion-stars { font-size: .85rem; color: var(--gold); letter-spacing: 1px; }
+.champion-level { font-size: .7rem; color: var(--text-muted); }
+.champion-types { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
+.champion-team-badge {
+  position: absolute; top: 4px; right: 6px;
+  background: var(--gold); color: #000;
+  font-size: .6rem; font-weight: 800;
+  padding: 1px 5px; border-radius: 4px;
+}
+
+/* Champion Grid */
+.champion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  padding: 12px 16px;
+}
+
+/* ============================================================
+   HP Bar
+   ============================================================ */
+.hp-bar-wrap { width: 100%; }
+.hp-label {
+  display: flex; justify-content: space-between;
+  font-size: .65rem; color: var(--text-muted); margin-bottom: 2px;
+}
+.hp-track {
+  width: 100%; height: 8px;
+  background: rgba(255,255,255,.1); border-radius: 4px; overflow: hidden;
+}
+.hp-fill {
+  height: 100%; border-radius: 4px;
+  transition: width .4s ease, background-color .4s;
+  background: var(--green);
+}
+.hp-fill.mid  { background: var(--orange); }
+.hp-fill.low  { background: var(--red); }
+
+/* ============================================================
+   Status Icon
+   ============================================================ */
+.status-icon {
+  display: inline-block; font-size: .8rem;
+  padding: 1px 5px; border-radius: 4px;
+  font-weight: 700;
+}
+.status-burn    { background: rgba(255,87,34,.3); color: #ff7043; }
+.status-poison  { background: rgba(156,39,176,.3); color: #ce93d8; }
+.status-paralyze{ background: rgba(255,235,59,.3); color: #ffee58; }
+.status-freeze  { background: rgba(0,188,212,.3);  color: #00e5ff; }
+.status-stun    { background: rgba(255,193,7,.3);  color: #ffca28; }
+.status-shield  { background: rgba(33,150,243,.3); color: #42a5f5; }
+
+/* ============================================================
+   Raid Cards
+   ============================================================ */
+.raid-list { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.raid-card {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+  cursor: pointer;
+  transition: transform .15s, border-color .2s;
+  overflow: hidden; position: relative;
+}
+.raid-card:active { transform: scale(.98); }
+.raid-card.locked { opacity: .5; pointer-events: none; }
+.raid-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.raid-name { font-size: 1rem; font-weight: 800; color: var(--text); }
+.raid-stars { font-size: .9rem; color: var(--gold); }
+.raid-desc  { font-size: .8rem; color: var(--text-muted); line-height: 1.4; }
+.raid-meta  { display: flex; gap: 12px; font-size: .75rem; color: var(--text-2); }
+.raid-waves { font-size: .75rem; color: var(--text-muted); }
+.raid-rewards { display: flex; gap: 8px; flex-wrap: wrap; }
+.reward-chip {
+  background: rgba(0,0,0,.3); border-radius: 99px; padding: 3px 10px;
+  font-size: .75rem; color: var(--text-2); font-weight: 600;
+}
+.raid-card-bg {
+  position: absolute; inset: 0; opacity: .08; z-index: 0;
+  background-size: cover; background-position: center;
+  pointer-events: none;
+}
+.raid-card > * { position: relative; z-index: 1; }
+.raid-complete-badge {
+  position: absolute; top: 10px; right: 10px;
+  background: var(--green); color: #000;
+  font-size: .65rem; font-weight: 800;
+  padding: 2px 8px; border-radius: 99px; z-index: 2;
+}
+
+/* ============================================================
+   Battle Screen
+   ============================================================ */
+.battle-screen {
+  flex: 1; display: flex; flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+}
+.battle-header {
+  padding: 8px 12px;
+  background: rgba(0,0,0,.4);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.wave-label  { font-size: .75rem; color: var(--text-muted); }
+.wave-value  { font-size: .85rem; font-weight: 700; color: var(--gold); }
+.turn-order  {
+  flex: 1; display: flex; gap: 4px;
+  overflow-x: auto; align-items: center;
+}
+.turn-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  overflow: hidden; background: var(--bg-card2);
+}
+.turn-icon img { width: 100%; height: 100%; image-rendering: pixelated; }
+.turn-icon.active-turn { border-color: var(--gold); box-shadow: 0 0 8px rgba(255,215,0,.6); }
+.turn-icon.enemy { border-color: var(--red); }
+
+.battle-field {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+}
+.enemy-area, .player-area {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 8px; gap: 8px; flex-wrap: wrap;
+}
+.enemy-area { background: rgba(244,67,54,.04); border-bottom: 1px solid var(--border); }
+.player-area { background: rgba(0,230,118,.04); }
+
+.battle-pokemon {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; position: relative; padding: 4px;
+}
+.battle-sprite {
+  width: 72px; height: 72px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.6));
+  transition: transform .2s;
+}
+.battle-sprite.enemy { filter: brightness(.9) drop-shadow(0 4px 12px rgba(0,0,0,.6)); }
+.battle-sprite.active-fighter { animation: bounce 1.5s ease-in-out infinite; }
+.battle-sprite.fainted { opacity: .25; filter: grayscale(1); transform: rotate(-45deg) !important; }
+.battle-pokemon-name { font-size: .7rem; font-weight: 700; text-align: center; max-width: 72px; }
+.battle-hp { width: 72px; }
+.battle-status { font-size: .6rem; }
+
+.damage-float {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  font-size: 1.1rem; font-weight: 900; pointer-events: none;
+  animation: floatUp .9s ease forwards;
+  z-index: 10; white-space: nowrap;
+}
+@keyframes floatUp {
+  0%   { transform: translateX(-50%) translateY(0); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(-48px); opacity: 0; }
+}
+.heal-float { color: var(--green); }
+.dmg-float  { color: var(--red); }
+.se-float   { color: var(--gold); font-size: 1.3rem; }
+.miss-float { color: var(--text-muted); }
+
+.battle-log {
+  height: 40px; overflow: hidden;
+  padding: 8px 14px; font-size: .8rem;
+  color: var(--text-2); background: rgba(0,0,0,.3);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center;
+}
+
+.skill-panel {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 10px 12px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+}
+.skill-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.skill-btn {
+  min-height: 52px; border-radius: var(--radius-sm);
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 8px 10px; gap: 2px;
+  border: 1px solid rgba(255,255,255,.1);
+  color: #fff; font-size: .8rem;
+  position: relative; overflow: hidden;
+  transition: transform .12s, opacity .12s;
+}
+.skill-btn:active { transform: scale(.97); }
+.skill-btn:disabled { opacity: .4; cursor: not-allowed; }
+.skill-btn-name { font-weight: 700; line-height: 1.2; }
+.skill-btn-meta { font-size: .65rem; opacity: .8; }
+.skill-cd-bar {
+  position: absolute; bottom: 0; left: 0;
+  height: 3px; background: rgba(0,0,0,.4);
+}
+.auto-btn {
+  width: 100%; min-height: 40px; margin-top: 8px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: .8rem; color: var(--text-2);
+  font-weight: 700;
+}
+.auto-btn.on { color: var(--cyan); border-color: var(--cyan); }
+
+/* ============================================================
+   Summon Screen
+   ============================================================ */
+.summon-options { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
+.summon-card {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  cursor: pointer;
+  transition: transform .15s, border-color .2s;
+}
+.summon-card:active { transform: scale(.98); }
+.summon-card.premium { border-color: var(--gold); }
+.summon-card-header { display: flex; justify-content: space-between; align-items: center; }
+.summon-title { font-size: 1.1rem; font-weight: 800; color: var(--text); }
+.summon-cost  { font-size: .9rem; font-weight: 700; }
+.summon-desc  { font-size: .8rem; color: var(--text-muted); line-height: 1.4; }
+.summon-odds  { font-size: .75rem; color: var(--text-2); }
+.summon-result {
+  background: var(--bg-card2);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; animation: slideUp .4s ease;
+}
+.summon-result img {
+  width: 120px; height: 120px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 20px rgba(255,215,0,.6));
+  animation: bounce 2s ease-in-out infinite;
+}
+.summon-result-name { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
+.summon-result-stars { font-size: 1.4rem; color: var(--gold); }
+
+/* ============================================================
+   Champion Detail Modal
+   ============================================================ */
+.champ-detail {
+  display: flex; flex-direction: column; gap: 14px; padding: 0 0 8px;
+}
+.champ-detail-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px;
+  background: var(--bg-card3);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.champ-detail-sprite {
+  width: 96px; height: 96px; image-rendering: pixelated;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.6));
+}
+.champ-detail-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.champ-detail-name { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
+.champ-detail-meta { font-size: .8rem; color: var(--text-muted); }
+
+.stat-row { display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+.stat-name { width: 40px; font-size: .7rem; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
+.stat-bar { flex: 1; height: 8px; background: rgba(255,255,255,.1); border-radius: 4px; overflow: hidden; }
+.stat-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--cyan), var(--purple)); }
+.stat-val  { width: 36px; text-align: right; font-size: .8rem; font-weight: 700; color: var(--text-2); }
+
+.skills-grid { display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
+.skill-info-row {
+  background: var(--bg-card3); border-radius: var(--radius-sm);
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;
+}
+.skill-info-name { font-size: .9rem; font-weight: 700; }
+.skill-info-meta { font-size: .75rem; color: var(--text-muted); }
+
+/* ============================================================
+   Modal
+   ============================================================ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,.7);
+  display: flex; align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.center { align-items: center; }
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  width: 100%; max-width: 480px;
+  max-height: 88dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: slideUp .25s ease;
+}
+.modal-box.center-modal {
+  border-radius: var(--radius);
+  margin: 16px;
+  width: calc(100% - 32px);
+}
+.modal-close {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; justify-content: flex-end;
+  padding: 10px 14px;
+  background: var(--bg-card);
+}
+.modal-close-btn {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,.08);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--text-2);
+}
+
+/* ============================================================
+   Toast
+   ============================================================ */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  z-index: 200;
+  background: var(--bg-card2); border: 1px solid var(--border);
+  color: var(--text); font-size: .85rem; font-weight: 600;
+  padding: 10px 20px; border-radius: 99px;
+  box-shadow: var(--shadow);
+  opacity: 0; transition: opacity .25s;
+  pointer-events: none; white-space: nowrap;
+}
+.toast.show { opacity: 1; }
+
+/* ============================================================
+   Search / Filter Bar
+   ============================================================ */
+.search-bar {
+  display: flex; gap: 8px; padding: 10px 16px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+.search-input {
+  flex: 1; min-height: 40px; padding: 0 12px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-size: .9rem;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus { outline: none; border-color: var(--purple); }
+
+/* ============================================================
+   Pokédex Browsing (Summon Pool)
+   ============================================================ */
+.pokemon-browse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px; padding: 12px 16px;
+}
+.pokemon-browse-card {
+  background: var(--bg-card2);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 8px 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  cursor: pointer;
+  transition: border-color .15s, transform .12s;
+}
+.pokemon-browse-card:active { transform: scale(.96); }
+.pokemon-browse-card img {
+  width: 64px; height: 64px; image-rendering: pixelated;
+}
+.pokemon-browse-name { font-size: .7rem; font-weight: 600; text-align: center; text-transform: capitalize; }
+.pokemon-browse-id   { font-size: .6rem; color: var(--text-muted); }
+.pokemon-browse-types { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; }
+
+/* ============================================================
+   Team Builder
+   ============================================================ */
+.team-slots {
+  display: flex; gap: 8px; padding: 12px 16px;
+  overflow-x: auto;
+}
+.team-slot {
+  flex-shrink: 0; width: 80px; height: 100px;
+  background: rgba(255,255,255,.04);
+  border: 2px dashed var(--border); border-radius: var(--radius-sm);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; cursor: pointer; font-size: .7rem; color: var(--text-muted);
+  transition: border-color .15s;
+}
+.team-slot.filled { border-style: solid; border-color: var(--gold); }
+.team-slot img { width: 52px; height: 52px; image-rendering: pixelated; }
+
+/* ============================================================
+   Result Screen
+   ============================================================ */
+.result-screen {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; padding: 32px 24px; text-align: center;
+  background: radial-gradient(ellipse at 50% 30%, #1a0a3a 0%, var(--bg) 70%);
+}
+.result-title {
+  font-size: clamp(2.5rem, 10vw, 4rem);
+  font-weight: 900; line-height: 1;
+}
+.result-title.win  { color: var(--gold);  text-shadow: 0 0 30px rgba(255,215,0,.6); }
+.result-title.lose { color: var(--red);   text-shadow: 0 0 30px rgba(244,67,54,.6); }
+.result-reward-row { display: flex; gap: 16px; justify-content: center; }
+.result-reward {
+  background: var(--bg-card2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-weight: 700; font-size: .9rem;
+}
+.result-reward-icon { font-size: 1.4rem; }
+
+/* ============================================================
+   Pokédex counter badge
+   ============================================================ */
+.pokedex-counter {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-size: .8rem; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--text-2);
+}
+.pokedex-counter span { color: var(--gold); font-size: 1rem; }
+
+/* ============================================================
+   Misc Helpers
+   ============================================================ */
+.divider {
+  height: 1px; background: var(--border);
+  margin: 4px 16px;
+}
+.empty-state {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; padding: 48px 24px;
+  text-align: center; color: var(--text-muted);
+}
+.empty-state-icon { font-size: 3rem; opacity: .3; }
+
+/* ============================================================
+   Responsive Helpers
+   ============================================================ */
+@media (min-width: 480px) {
+  .modal-box { border-radius: var(--radius); margin: 20px; width: calc(100% - 40px); }
+  .starter-card img { width: 88px; height: 88px; }
+  .battle-sprite { width: 88px; height: 88px; }
+}
+@media (min-width: 640px) {
+  .champion-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .skill-row { grid-template-columns: repeat(4, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
