@@ -1,0 +1,13 @@
+{
+  "name": "raid-monster",
+  "version": "1.0.0",
+  "description": "A Pokémon-style mobile RPG inspired by Raid Shadow Legends – 1000+ champions, raid dungeons, turn-based combat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["pokemon", "raid", "rpg", "mobile", "turn-based"],
+  "author": "RaidMonster",
+  "license": "MIT"
+}
